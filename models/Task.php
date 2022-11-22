@@ -49,14 +49,37 @@ class Task {
         return $this->id_user;
     }
 
-    public static function afficherTask()
+    public static function afficher()
     {
     $cnx = new Connexion();
     $pdo = $cnx->getPdo();
-    $stmt = $pdo->prepare("SELECT * FROM task WHERE id_user = :id_user");
+    $stmt = $pdo->prepare("SELECT * FROM task WHERE `id_user` = :id_user");
     $stmt->execute([
         'id_user'=> $this->id_user
     ]);
     }
 
+    public static function edit()
+    {
+        try{
+    $id_to_edit = $_GET['id'];
+    $cnx = new Connexion();
+    $pdo = $cnx->getPdo();
+    $stmt = $pdo->prepare(("UPDATE task SET `name` = :new_name, `to_do_at` = new_date WHERE id = :id"));
+    $stmt->execute([
+        'new_name' => $_POST['name'],
+        'new_date' => $_POST['to_do_at'],
+        'id' => $id_to_edit
+    ]);
+    header('Location: index.php');
+    } catch (PDOException $e) {
+    echo $e = "<h2>Nous n'avons pas réussi à nous connecter à la base de données.</h2>";
+    die;
+    }
+    }
+
+    // public static function delete()
+    // {
+
+    // }
 }
